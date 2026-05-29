@@ -959,7 +959,11 @@ def api_create_share():
 
     # Create directory with Samba-friendly permissions
     os.makedirs(path, mode=0o2775, exist_ok=True)
-    os.chmod(path, 0o2775)
+
+    try:
+        os.chmod(path, 0o2775)
+    except PermissionError:
+        pass
 
     shares = load_json(SHARES_FILE, [])
     if any(s["name"] == name for s in shares):
